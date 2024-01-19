@@ -22,12 +22,13 @@
                     <a href="{% url 'add_post' %}" class="nav_link">Create</a>
                 {% endif %}
             </div>
-            <form action="" method="post" class="header_search">
+            <form action="{% url 'search' %}" method="post" class="header_search">
+                {% csrf_token %}
                 <label for="search">
                     <svg class="header_search_icon">
                         <use xlink:href="#search-icon"></use>
                     </svg>
-                    <input type="text" name="search" id="search" placeholder="Search">
+                    <input type="text" name="searched" id="search" placeholder="Search">
                 </label>
             </form>
             <div class="header_right">
