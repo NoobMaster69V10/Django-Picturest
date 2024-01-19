@@ -1,0 +1,50 @@
+{% extends 'picturest/base.html' %}
+{% block title %}Picturest | Profile{% endblock %}
+{% load static %}
+{% block header %}
+    <header class="header">
+        <div class="header_inner">
+            <div class="header_left">
+                <a href="{% url 'main' %}" class="header_home">
+                    <img src="{% static 'picturest/img/header/logo.svg' %}" alt="home logo">
+                </a>
+                <a href="{% url 'main' %}" class="nav_link">Home</a>
+                <a href="{% url 'add_post' %}" class="nav_link">Create</a>
+            </div>
+            <form action="" method="post" class="header_search">
+                <label for="search">
+                    <svg class="header_search_icon">
+                        <use xlink:href="#search-icon"></use>
+                    </svg>
+                    <input type="text" name="search" id="search" placeholder="Search">
+                </label>
+            </form>
+            <div class="header_right">
+                <a href="{% url 'profile' %}" class="profile" title="Your Profile">
+                    <img src="{{user.profile.image.url}}" alt="profile picture">
+                    <a href="{% url 'log_out' %}" class="header_login" style="margin-left: 10px;font-size: 1.2rem;">Log out</a>
+                </a>
+            </div>
+        </div>
+    </header>
+{% endblock %}
+
+{% block content %}
+    <div class="profile_pg">
+        <form method="POST" enctype="multipart/form-data" class="add_post_form" style="margin-top: 100px;">
+                {% csrf_token %}
+                <img src="{{user.profile.image.url}}" alt="profile picture">
+                <h1>{{user.profile.name}}</h1>
+                {% for f in form %}
+                    <label for="{{ f.id_for_label }}">
+                        <h3>{{ f.label }}</h3>
+                        {{ f }}
+                    </label>
+                    <div>{{ f.errors }}</div>
+                {% endfor %}
+                <label for="submit">
+                    <input type="submit" name="submit" id="submit" value="Edit" class="add_form_submit">
+                </label>
+        </form>
+    </div>
+{% endblock %}

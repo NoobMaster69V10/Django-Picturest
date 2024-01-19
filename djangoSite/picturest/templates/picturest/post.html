@@ -1,0 +1,96 @@
+{% extends 'picturest/base.html' %}
+{% block title %}Picturest | Post{% endblock %}
+{% load static %}
+{% block header %}
+    <header class="header">
+        <div class="header_inner">
+            <div class="header_left">
+                <a href="{% url 'main' %}" class="header_home">
+                    {% if request.user.is_authenticated %}
+                        <img src="{% static 'picturest/img/header/logo.svg'%}" alt="home logo">
+                        <a href="{% url 'main' %}" class="nav_link">Home</a>
+                    {% else %}
+                        <a href="{% url 'home' %}" class="header_home">
+                            <img src="{% static 'picturest/img/header/logo.svg'%}" alt="home logo">
+                            <h1>Picturest</h1>
+                        </a>
+                        <a href="{% url 'home' %}" class="nav_link">Home</a>
+                    {% endif %}
+                </a>
+
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'add_post' %}" class="nav_link">Create</a>
+                {% endif %}
+            </div>
+            <form action="" method="post" class="header_search">
+                <label for="search">
+                    <svg class="header_search_icon">
+                        <use xlink:href="#search-icon"></use>
+                    </svg>
+                    <input type="text" name="search" id="search" placeholder="Search">
+                </label>
+            </form>
+            <div class="header_right">
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'profile' %}" class="profile" title="Your Profile">
+                        <img src="{{user.profile.image.url}}" alt="profile picture">
+                        <a href="{% url 'log_out' %}" class="header_login" style="margin-left: 10px;font-size: 1.2rem;">Log out</a>
+                    </a>
+                {% else %}
+                    <a href="{% url 'log_in' %}" class="header_login">Log in</a>
+                    <a href="{% url 'sign_up' %}" class="header_signup">Sign up</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+{% endblock %}
+
+{% block content %}
+    <div class="post">
+        <div class="post_inner">
+            <img src="{{ post.image.url }}" alt="post image">
+            <div class="post_right" style="width: 50%;">
+                <div class="post_right_top" style="display: flex; flex-direction: column; position: relative; width: 100%;align-items: center;">
+                        <a href="{{ post.image.url }}" download class="post_download" style="position:absolute;width: 40px; height: 40px; top: 0px; right: 20px;">
+                            <svg style="width: 40px; height: 40px;">
+                                <use xlink:href="#download-icon"></use>
+                            </svg>
+                        </a>
+                    <h3 style="font-size: 2.2rem; text-transform: capitalize; text-align: center">{{post.title}}</h3>
+                    <h1 style="font-size: 1.2rem; margin: 5px 0 15px 0; font-weight: 500;">Author: {{post.user.profile.name}}</h1>
+                    <p style="font-size: 1.2rem; font-weight: 300; line-height: 1;">{{post.description}}</p>
+                </div>
+                <div class="post_comments">
+                    <h5>Comments</h5>
+                    <div class="comments_inner" style="overflow-y: scroll; width:100%;">
+                        {% if comments %}
+                            {% for comment in comments %}
+                                <div class="comment">
+                                    <img src="{{comment.owner.profile.image.url}}" alt="Profile picture">
+                                    <h1>{{comment.owner.profile.name}}</h1>
+                                    <h6>{{comment.text}}</h6>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                {% if request.user.is_authenticated %}
+                    <div class="add_comment">
+                        <img src="{{user.profile.image.url}}" alt="Profile picture">
+                        <form method="POST" class="add_comment">
+                            {% csrf_token %}
+                            {% for f in form %}
+                                <label for="{{ f.id_for_label }}">
+                                    <h3>{{ f.label }}</h3>
+                                    {{ f }}
+                                </label>
+                                <div>{{ f.errors }}</div>
+                            {% endfor %}
+                            <input type="submit" value="Send" style="width: 40px;height: 40px; text-align: center;font-size: 1rem; display: flex; justify-content: center; cursor: pointer;padding: 0;">
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

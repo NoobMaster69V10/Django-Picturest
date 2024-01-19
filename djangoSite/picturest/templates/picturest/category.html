@@ -1,0 +1,58 @@
+{% extends 'picturest/base.html' %}
+{% block title %}Picturest | {{category}}{% endblock %}
+{% load static %}
+{% block header %}
+    <header class="header">
+        <div class="header_inner">
+            <div class="header_left">
+                <a href="{% url 'home' %}" class="header_home">
+                    <img src="{% static 'picturest/img/header/logo.svg' %}" alt="home logo">
+                    <h1>Picturest</h1>
+                </a>
+
+                <a href="{% url 'explore' %}" class="nav_link active">Explore</a>
+            </div>
+            <form action="{% url 'search' %}" method="POST" class="header_search">
+                {% csrf_token %}
+                <label for="search">
+                    <svg class="header_search_icon">
+                        <use xlink:href="#search-icon"></use>
+                    </svg>
+                    <input type="text" name="searched" id="search" placeholder="Search">
+                </label>
+            </form>
+            <div class="header_right">
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'profile' %}" class="profile" title="Your Profile">
+                        <img src="{{user.profile.image.url}}" alt="profile picture">
+                        <a href="{% url 'log_out' %}" class="header_login" style="margin-left: 10px;font-size: 1.2rem;">Log out</a>
+                    </a>
+                {% else %}
+                    <a href="{% url 'log_in' %}" class="header_login">Log in</a>
+                    <a href="{% url 'sign_up' %}" class="header_signup">Sign up</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+{% endblock %}
+
+{% block content %}
+    <div class="explore">
+        <div class="explore_bottom">
+            <h2 style="margin-bottom: 20px; text-transform: capitalize;">Category: '{{category}}'</h2>
+            <div class="explore_bottom_inner" style="display: flex; flex-wrap: wrap;">
+                {% for post in cat %}
+                    <a href="{{ post.get_absolute_url }}" class="explore_bottom_item" style="color:#000; margin-right: 1%; width: 16%;">
+                        <img src="{{ post.image.url }}" alt="image">
+                        <h1>{{ post.title }}</h1>
+                        <h4>{{ post.description }}</h4>
+                        <div class="explore_username">
+                            <img src="{{post.user.profile.image.url}}" alt="user image">
+                            <h3>{{post.user.profile.name}}</h3>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

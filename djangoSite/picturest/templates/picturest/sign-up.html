@@ -1,0 +1,24 @@
+{% extends 'picturest/base.html' %}
+{% block title %}Picturest | Signup{% endblock %}
+{% block content %}
+            <div class="main_forms" style="margin-top: -100px">
+                <img src="{{user.profile.image.url}}" alt="">
+                <form method="post" class="main_form">
+                    <h1 class="form_title">Sign up</h1>
+                    {% csrf_token %}
+                    {{profile}}
+                    {% for f in form %}
+                        <label for="{{ f.id_for_label }}">
+                            <h3>{{ f.label }}:</h3>
+                            {{ f }}
+                        </label>
+                        <div>{{ f.errors }}</div>
+                    {% endfor %}
+                    <label for="submit">
+                        <input type="submit" name="submit" id="submit" value="Sign up" class="submit_btn">
+                    </label>
+                    <a href="{% url 'log_in' %}" style="color: #000;text-decoration: underline; margin-top: 15px;">Log in</a>
+                    <a href="{% url 'home' %}" style="color: #000;text-decoration: underline; margin-top: 15px;">Back</a>
+                </form>
+            </div>
+{% endblock %}

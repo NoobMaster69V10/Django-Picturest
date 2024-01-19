@@ -1,0 +1,33 @@
+{% extends 'picturest/base.html' %}
+{% block title %}Picturest{% endblock %}
+{% load static %}
+{% block header %}
+     <header class="header">
+        <div class="header_inner">
+            <div class="header_left">
+                <a href="{% url 'home' %}" class="header_home">
+                    {% if request.user.is_authenticated %}
+                        <img src="{% static 'picturest/img/header/logo.svg'%}" alt="home logo">
+                        <h1>Picturest</h1>
+                    {% else %}
+                        <img src="{% static 'picturest/img/header/logo.svg'%}" alt="home logo">
+                        <h1>Picturest</h1>
+                    {% endif %}
+                </a>
+                <a href="{% url 'home' %}" class="nav_link">Home</a>
+                <a href="{% url 'explore' %}" class="nav_link">Explore</a>
+            </div>
+            <div class="header_right">
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'profile' %}" class="profile" title="Your Profile">
+                        <img src="{{user.profile.image.url}}" alt="profile picture">
+                        <a href="{% url 'log_out' %}" class="header_login" style="margin-left: 10px;font-size: 1.2rem;">Log out</a>
+                    </a>
+                {% else %}
+                    <a href="{% url 'log_in' %}" class="header_login">Log in</a>
+                    <a href="{% url 'sign_up' %}" class="header_signup">Sign up</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+{% endblock %}

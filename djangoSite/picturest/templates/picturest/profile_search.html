@@ -1,0 +1,57 @@
+{% extends 'picturest/base.html' %}
+{% block title %}Picturest | Profile{% endblock %}
+{% load static %}
+{% block header %}
+    <header class="header">
+        <div class="header_inner">
+            <div class="header_left">
+                <a href="{% url 'main' %}" class="header_home">
+                    <img src="{% static 'picturest/img/header/logo.svg' %}" alt="home logo">
+                </a>
+                <a href="{% url 'main' %}" class="nav_link">Home</a>
+                <a href="{% url 'add_post' %}" class="nav_link">Create</a>
+            </div>
+            <form action="{% url 'profile_search' %}" method="POST" class="header_search">
+                {% csrf_token %}
+                <label for="search">
+                    <svg class="header_search_icon">
+                        <use xlink:href="#search-icon"></use>
+                    </svg>
+                    <input type="text" name="search" id="search" placeholder="Search your pics">
+                </label>
+            </form>
+            <div class="header_right">
+                <a href="{% url 'profile' %}" class="profile" title="Your Profile">
+                    <img src="{{user.profile.image.url}}" alt="profile picture">
+                    <a href="{% url 'log_out' %}" class="header_login" style="margin-left: 10px;font-size: 1.2rem;">Log out</a>
+                </a>
+            </div>
+        </div>
+    </header>
+{% endblock %}
+
+{% block content %}
+    <div class="profile_pg">
+        <img src="{{user.profile.image.url}}" alt="profile picture">
+        {% if user.profile.name %}
+            <h1>{{ user.profile.name }}</h1>
+        {% else %}
+            <h1>No Name</h1>
+        {% endif %}
+        <h3>@{{ user.username }}</h3>
+        <a href="{% url 'profile_edit' %}" style="border: 1px solid #000; margin-top: 20px;padding: 10px 30px; color: #000; font-weight: 700;">Edit Profile</a>
+    </div>
+    <div class="owner_posts" style="margin-top: 100px;">
+        <h1 style="text-align: center; margin-bottom: 30px;">Search result for: '{{search_word}}'</h1>
+        <div class="container">
+            <div class="owner_posts_inner" style="display: flex; flex-wrap: wrap;">
+
+                {% for post in posts %}
+                    <a href="{{post.get_absolute_url}}" class="owner_posts_item" style="width: 24%; overflow:hidden; border-radius: 20px; margin-right: 1%;">
+                        <img style="width: 100%; object-fit: cover; border-radius: 20px" src="{{post.image.url}}" alt="Post image">
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

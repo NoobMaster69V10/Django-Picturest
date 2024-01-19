@@ -1,0 +1,48 @@
+{% extends 'picturest/base.html' %}
+{% block title %}Picturest | Explore{% endblock %}
+{% load static %}
+{% block header %}
+    <header class="header">
+        <div class="header_inner">
+            <div class="header_left">
+                <a href="{% url 'main' %}" class="header_home">
+                    <img src="{% static 'picturest/img/header/logo.svg' %}" alt="home logo">
+                </a>
+                <a href="{% url 'main' %}" class="nav_link">Home</a>
+                <a href="{% url 'add_post' %}" class="nav_link active">Create</a>
+            </div>
+
+            <div class="header_right">
+                <a href="{% url 'profile' %}" class="profile" title="Your Profile">
+                    {% if user.profile.image.url %}
+                        <img src="{{user.profile.image.url}}" alt="profile picture">
+                    {% else %}
+                        <img src="{% static 'picturest/img/placeholder/placeholder.svg' %}" alt="profile picture">
+                    {% endif %}
+                    <a href="{% url 'log_out' %}" class="header_login" style="margin-left: 10px;font-size: 1.2rem;">Log out</a>
+                </a>
+            </div>
+        </div>
+    </header>
+{% endblock %}
+
+{% block content %}
+    <div class="add_post">
+        <h1 class="add_post_title">Create pic</h1>
+        <div class="container">
+            <form method="POST" enctype="multipart/form-data" class="add_post_form">
+                {% csrf_token %}
+                {% for f in form %}
+                    <label for="{{ f.id_for_label }}">
+                        <h3>{{ f.label }}</h3>
+                        {{ f }}
+                    </label>
+                    <div>{{ f.errors }}</div>
+                {% endfor %}
+                <label for="submit">
+                    <input type="submit" name="submit" id="submit" value="Post" class="add_form_submit">
+                </label>
+            </form>
+        </div>
+    </div>
+{% endblock %}
