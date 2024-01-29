@@ -1,1 +1,1 @@
-https://genadi.pythonanywhere.com/
+https://picturest.pythonanywhere.com/
